@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Picoage.EventSourcing.Common\Picoage.EventSourcing.Common.csproj" />
+  </ItemGroup>
+
 </Project>

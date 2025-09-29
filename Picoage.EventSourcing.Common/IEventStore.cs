@@ -1,6 +1,6 @@
 ﻿namespace Picoage.EventSourcing.Common
 {
-    public interface IEventStore
+    public interface IEventStore:IDisposable
     {
         Task CreateEvent(string id);
 
@@ -8,7 +8,7 @@
 
         Task SaveEvents(); 
 
-        Task<IEnumerable<EventMessage>> GetEvents(string id);
+        Task<IEnumerable<EventMessage>> ReplyEvents(string id);
 
     }
 }
