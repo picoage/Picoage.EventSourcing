@@ -71,24 +71,16 @@ namespace Picoage.EventSourcing.CosmosDb
 
         public async Task SaveEvents()
         {
-            CosmosEvent cosmosEvent = new()
-            {
-                id = collectionId,
-                EventMessage = eventMessages,
-                CreatedAt = DateTimeOffset.UtcNow
-            };
-            var jsonSetting = new JsonSerializerSettings
-            {
-                Converters = {new EventConvertor()},
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
+            CosmosEvent cosmosEvent = CreateCosmosEvent();
+
+            JsonSerializerSettings jsonSetting = CreateJsonSerializerSettings();
 
             try
             {
                 var jsonObject = await container.ReadItemAsync<JObject>(collectionId, new PartitionKey(collectionId));
-                var c = JsonConvert.DeserializeObject<CosmosEvent>(jsonObject.Resource.ToString());
+                CosmosEvent exsistingCosmosEvent = JsonConvert.DeserializeObject<CosmosEvent>(jsonObject.Resource.ToString())?? new();
 
-                cosmosEvent.EventMessage = c?.EventMessage?.Concat(eventMessages)?.ToList() ?? [];
+                cosmosEvent.EventMessage = exsistingCosmosEvent?.EventMessage?.Concat(eventMessages)?.ToList() ?? [];
 
                 string json = JsonConvert.SerializeObject(cosmosEvent, jsonSetting);
                 var jdoc = JObject.Parse(json);
@@ -104,6 +96,25 @@ namespace Picoage.EventSourcing.CosmosDb
                 await container.CreateItemAsync(jdoc, new PartitionKey(collectionId));
                 eventMessages.Clear();
             }
+        }
+
+        private static JsonSerializerSettings CreateJsonSerializerSettings()
+        {
+            return new()
+            {
+                Converters = { new EventConvertor() },
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+        }
+
+        private CosmosEvent CreateCosmosEvent()
+        {
+            return new()
+            {
+                id = collectionId,
+                EventMessage = eventMessages,
+                CreatedAt = DateTimeOffset.UtcNow
+            };
         }
     }
 }
