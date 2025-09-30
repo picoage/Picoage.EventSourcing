@@ -1,0 +1,109 @@
+﻿using Azure.Identity;
+using Microsoft.Azure.Cosmos;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Picoage.EventSourcing.Common;
+
+namespace Picoage.EventSourcing.CosmosDb
+{
+    public class CosmosEventStore : IEventStore
+    {
+
+        private readonly Container container;
+        private readonly CosmosClient cosmosClient;
+        private CosmosClientOptions cosmosClientOptions = new();
+        private IList<EventMessage> eventMessages = [];
+        private static string collectionId = string.Empty;
+
+        public CosmosEventStore(string connectionString, string databaseName, string containerName)
+        {
+            cosmosClientOptions.ApplicationRegion = Regions.UKSouth;
+            cosmosClient = new CosmosClient(connectionString: connectionString, cosmosClientOptions);
+            Database database = cosmosClient.GetDatabase(databaseName);
+            database.CreateContainerIfNotExistsAsync(new ContainerProperties
+            {
+                Id = containerName,
+                PartitionKeyPath = "/id"
+            }).Wait();
+            container = database.GetContainer(containerName);
+        }
+
+        public CosmosEventStore(string endpoint, string databaseName, string containerName, string region = Regions.UKSouth)
+        {
+            cosmosClientOptions.ApplicationRegion = region;
+            cosmosClient = new CosmosClient(accountEndpoint: endpoint, tokenCredential: new DefaultAzureCredential());
+            Database database = cosmosClient.GetDatabase(databaseName);
+            database.CreateContainerIfNotExistsAsync(new ContainerProperties
+            {
+                Id = containerName,
+                PartitionKeyPath = "/id"
+            });
+            container = database.GetContainer(containerName);
+        }
+
+        public Task CreateEvent(string id)
+        {
+            collectionId = id;
+            return Task.CompletedTask;
+        }
+
+
+        public Task AppendEvent(EventMessage eventMessage)
+        {
+            eventMessages.Add(eventMessage);
+            return Task.CompletedTask;
+        }
+
+
+        public void Dispose()
+        {
+            cosmosClient.Dispose();
+            eventMessages.Clear();
+            GC.SuppressFinalize(this);
+        }
+
+        public async Task<IEnumerable<EventMessage>> ReplyEvents(string id)
+        {
+            var jsonObject = await container.ReadItemAsync<JObject>(id, new PartitionKey(id));
+            CosmosEvent? cosmosEvent = JsonConvert.DeserializeObject<CosmosEvent>(jsonObject.Resource.ToString());
+            return cosmosEvent?.EventMessage ?? [];
+        }
+
+        public async Task SaveEvents()
+        {
+            CosmosEvent cosmosEvent = new()
+            {
+                id = collectionId,
+                EventMessage = eventMessages,
+                CreatedAt = DateTimeOffset.UtcNow
+            };
+            var jsonSetting = new JsonSerializerSettings
+            {
+                Converters = {new EventConvertor()},
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+
+            try
+            {
+                var jsonObject = await container.ReadItemAsync<JObject>(collectionId, new PartitionKey(collectionId));
+                var c = JsonConvert.DeserializeObject<CosmosEvent>(jsonObject.Resource.ToString());
+
+                cosmosEvent.EventMessage = c?.EventMessage?.Concat(eventMessages)?.ToList() ?? [];
+
+                string json = JsonConvert.SerializeObject(cosmosEvent, jsonSetting);
+                var jdoc = JObject.Parse(json);
+
+                await container.UpsertItemAsync(jdoc, new PartitionKey(collectionId));
+                eventMessages.Clear();
+            }
+            catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                string json = JsonConvert.SerializeObject(cosmosEvent, jsonSetting);
+                var jdoc = JObject.Parse(json);
+
+                await container.CreateItemAsync(jdoc, new PartitionKey(collectionId));
+                eventMessages.Clear();
+            }
+        }
+    }
+}
