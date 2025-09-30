@@ -78,43 +78,47 @@ namespace Picoage.EventSourcing.CosmosDb
             try
             {
                 var jsonObject = await container.ReadItemAsync<JObject>(collectionId, new PartitionKey(collectionId));
-                CosmosEvent exsistingCosmosEvent = JsonConvert.DeserializeObject<CosmosEvent>(jsonObject.Resource.ToString())?? new();
+                CosmosEvent exsistingCosmosEvent = JsonConvert.DeserializeObject<CosmosEvent>(jsonObject.Resource.ToString()) ?? new();
 
                 cosmosEvent.EventMessage = exsistingCosmosEvent?.EventMessage?.Concat(eventMessages)?.ToList() ?? [];
 
-                string json = JsonConvert.SerializeObject(cosmosEvent, jsonSetting);
-                var jdoc = JObject.Parse(json);
+                JObject jdoc = CreateJObjectFromCosmosEvent(cosmosEvent, jsonSetting);
 
                 await container.UpsertItemAsync(jdoc, new PartitionKey(collectionId));
                 eventMessages.Clear();
             }
             catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                string json = JsonConvert.SerializeObject(cosmosEvent, jsonSetting);
-                var jdoc = JObject.Parse(json);
+                JObject jdoc = CreateJObjectFromCosmosEvent(cosmosEvent, jsonSetting);
 
                 await container.CreateItemAsync(jdoc, new PartitionKey(collectionId));
                 eventMessages.Clear();
             }
         }
 
-        private static JsonSerializerSettings CreateJsonSerializerSettings()
+        private static JObject CreateJObjectFromCosmosEvent(CosmosEvent cosmosEvent, JsonSerializerSettings jsonSetting)
         {
-            return new()
-            {
-                Converters = { new EventConvertor() },
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
+            string json = JsonConvert.SerializeObject(cosmosEvent, jsonSetting);
+            JObject jdoc = JObject.Parse(json);
+            return jdoc;
         }
 
-        private CosmosEvent CreateCosmosEvent()
-        {
-            return new()
-            {
-                id = collectionId,
-                EventMessage = eventMessages,
-                CreatedAt = DateTimeOffset.UtcNow
-            };
-        }
+        private static JsonSerializerSettings CreateJsonSerializerSettings() =>
+
+             new()
+             {
+                 Converters = { new EventConvertor() },
+                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+             };
+
+
+        private CosmosEvent CreateCosmosEvent() =>
+
+             new()
+             {
+                 id = collectionId,
+                 EventMessage = eventMessages,
+                 CreatedAt = DateTimeOffset.UtcNow
+             };
     }
 }
