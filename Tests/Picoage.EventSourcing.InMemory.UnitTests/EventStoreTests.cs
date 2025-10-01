@@ -12,8 +12,8 @@ namespace Picoage.EventSourcing.InMemory.UnitTests
             using IEventStore eventStore = new EventStore();
 
             //Act
-            await eventStore.CreateEvent("test-id");
-            await eventStore.AppendEvent(new EventMessage
+            await eventStore.CreateEventAsync("test-id");
+            await eventStore.AppendEventAsync(new EventMessage
             {
                 Event = new TestEvent
                 {
@@ -27,9 +27,9 @@ namespace Picoage.EventSourcing.InMemory.UnitTests
                 }
 
             });
-            await eventStore.SaveEvents();
+            await eventStore.SaveEventsAsync();
 
-            await eventStore.AppendEvent(new EventMessage
+            await eventStore.AppendEventAsync(new EventMessage
             {
                 Event = new TestEvent
                 {
@@ -43,9 +43,9 @@ namespace Picoage.EventSourcing.InMemory.UnitTests
                 }
 
             });
-            await eventStore.SaveEvents();
+            await eventStore.SaveEventsAsync();
 
-            var events = await eventStore.ReplyEvents("test-id");
+            var events = await eventStore.ReplyEventsAsync("test-id");
 
             //Assert
             Assert.NotNull(events);
