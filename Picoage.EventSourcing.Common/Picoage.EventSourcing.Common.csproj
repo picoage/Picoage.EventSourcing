@@ -2,8 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+	  <PackageId>Picoage.EventSourcing.CosmosDb</PackageId>
 	  <Version>1.0.2</Version>
 	  <Authors>Vishnu Kumar</Authors>
 	  <Company>Picoage</Company>
@@ -11,6 +10,8 @@
 	  <Description>
 		  This package can be used for Cosmos DB event sourcing.
 	  </Description>
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
