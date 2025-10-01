@@ -2,13 +2,13 @@
 {
     public interface IEventStore:IDisposable
     {
-        Task CreateEvent(string id);
+        Task CreateEventAsync(string id);
 
-        Task AppendEvent(EventMessage eventMessage);
+        Task AppendEventAsync(EventMessage eventMessage);
 
-        Task SaveEvents(); 
+        Task SaveEventsAsync(); 
 
-        Task<IEnumerable<EventMessage>> ReplyEvents(string id);
+        Task<IEnumerable<EventMessage>> ReplyEventsAsync(string id);
 
     }
 }

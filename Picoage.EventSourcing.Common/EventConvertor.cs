@@ -32,9 +32,21 @@ namespace Picoage.EventSourcing.Common
 
         dynamic CreateInstanceFromAssemble(string typeName)
         {
-            var assembly = Assembly.LoadFrom("EventSourcing.Common.dll");
-            var t = assembly.GetTypes().SingleOrDefault(e => e.Name == typeName);
-            var value = Activator.CreateInstance(t ?? throw new InvalidOperationException($"Type '{typeName}' not found"));
+            Assembly entryAssembly = Assembly.GetEntryAssembly()!;
+            object value = new ();
+
+            AssemblyName[] referencedAssemblies = entryAssembly.GetReferencedAssemblies();
+
+            foreach (AssemblyName referencedAssembly in referencedAssemblies)
+            {
+                Assembly assembly = Assembly.Load(referencedAssembly);
+
+                Type? typrFromAssembly = assembly.GetTypes().SingleOrDefault(e => e.Name == typeName);
+
+                if (typrFromAssembly is null) continue;
+                value = Activator.CreateInstance(typrFromAssembly) ?? throw new InvalidOperationException($"Type '{typeName}' not found");
+                break;
+            }
             return value;
         }
     }

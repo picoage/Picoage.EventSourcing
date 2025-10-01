@@ -41,14 +41,14 @@ namespace Picoage.EventSourcing.CosmosDb
             container = database.GetContainer(containerName);
         }
 
-        public Task CreateEvent(string id)
+        public Task CreateEventAsync(string id)
         {
             collectionId = id;
             return Task.CompletedTask;
         }
 
 
-        public Task AppendEvent(EventMessage eventMessage)
+        public Task AppendEventAsync(EventMessage eventMessage)
         {
             eventMessages.Add(eventMessage);
             return Task.CompletedTask;
@@ -62,14 +62,14 @@ namespace Picoage.EventSourcing.CosmosDb
             GC.SuppressFinalize(this);
         }
 
-        public async Task<IEnumerable<EventMessage>> ReplyEvents(string id)
+        public async Task<IEnumerable<EventMessage>> ReplyEventsAsync(string id)
         {
             var jsonObject = await container.ReadItemAsync<JObject>(id, new PartitionKey(id));
             CosmosEvent? cosmosEvent = JsonConvert.DeserializeObject<CosmosEvent>(jsonObject.Resource.ToString());
             return cosmosEvent?.EventMessage ?? [];
         }
 
-        public async Task SaveEvents()
+        public async Task SaveEventsAsync()
         {
             CosmosEvent cosmosEvent = CreateCosmosEvent();
 

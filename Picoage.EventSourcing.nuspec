@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>Picoage.CleanArchitecture.RestApi</id>
+        <version>1.0.2</version>
+        <description>
+            This is a web api project template built on Clean Architecture.
+        </description>
+        <authors>Vishnu - Picoage</authors>
+        <license type="expression">Apache-2.0</license>
+        <packageTypes>
+            <packageType name="Template" />
+        </packageTypes>
+    </metadata>
+    <files>
+        <file src="Src\**\*.*" exclude="Src\**\bin\**\*.*;Src\**\obj\**\*.*" target="Src" />
+        <file src="Deployment\README.md" target="" />
+    </files>
+</package>

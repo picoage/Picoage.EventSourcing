@@ -10,22 +10,22 @@ namespace Picoage.EventSourcing.InMemory
 
         private static IList<InMemoryEvent>? inMemoryEvents = [];
 
-        public Task CreateEvent(string id)
+        public Task CreateEventAsync(string id)
         {
             Id = id;
             return Task.CompletedTask;
         }
 
-        public Task AppendEvent(EventMessage eventMessage)
+        public Task AppendEventAsync(EventMessage eventMessage)
         {
             eventMessages.Add(eventMessage);
             return Task.CompletedTask;
         }
 
 
-        public Task SaveEvents()
+        public Task SaveEventsAsync()
         {
-            IList<InMemoryEvent> updateInMemoryEvents = inMemoryEvents?.Where(e => e?.Id == Id).ToList()?? [];
+            IList<InMemoryEvent> updateInMemoryEvents = inMemoryEvents?.Where(e => e?.Id == Id).ToList() ?? [];
 
             if (!updateInMemoryEvents.Any())
             {
@@ -38,7 +38,7 @@ namespace Picoage.EventSourcing.InMemory
             return Task.CompletedTask;
         }
 
-        public Task<IEnumerable<EventMessage>> ReplyEvents(string id) => Task.Run(() => inMemoryEvents?.Where(e => e?.Id == id)
+        public Task<IEnumerable<EventMessage>> ReplyEventsAsync(string id) => Task.Run(() => inMemoryEvents?.Where(e => e?.Id == id)
             .SelectMany(e => e?.EventMessages ?? []) ?? []);
 
 
