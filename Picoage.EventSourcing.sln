@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Picoage.EventSourcing.Commo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Picoage.EventSourcing.CosmosDb", "Picoage.EventSourcing.CosmosDb\Picoage.EventSourcing.CosmosDb.csproj", "{2D69404E-BD66-4882-AB76-0A99F6A14C5F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Tests", "_Tests", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Picoage.EventSourcing.InMemory.UnitTests", "Tests\Picoage.EventSourcing.InMemory.UnitTests\Picoage.EventSourcing.InMemory.UnitTests.csproj", "{BC8E0385-B560-4C3B-9C19-DEF07B46C595}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,9 +31,16 @@ Global
 		{2D69404E-BD66-4882-AB76-0A99F6A14C5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D69404E-BD66-4882-AB76-0A99F6A14C5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D69404E-BD66-4882-AB76-0A99F6A14C5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC8E0385-B560-4C3B-9C19-DEF07B46C595}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC8E0385-B560-4C3B-9C19-DEF07B46C595}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC8E0385-B560-4C3B-9C19-DEF07B46C595}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC8E0385-B560-4C3B-9C19-DEF07B46C595}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BC8E0385-B560-4C3B-9C19-DEF07B46C595} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0D0B0142-D700-4217-835E-0695160FF1CA}

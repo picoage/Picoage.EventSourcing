@@ -2,8 +2,22 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
+	  <PackageId>Picoage.EventSourcing.CosmosDb</PackageId>
+	  <Authors>Vishnu Kumar</Authors>
+	  <Company>Picoage</Company>
+	  <Product>Picoage.EventSourcing.CosmosDb</Product>
+	  <Description>
+		  This package can be used for Cosmos DB event sourcing.
+	  </Description>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Core" Version="1.49.0" />
+    <PackageReference Include="Azure.Identity" Version="1.16.0" />
+    <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.53.1" />
+    <PackageReference Include="Picoage.EventSourcing.Common" Version="1.0.1" />
+  </ItemGroup>
 
 </Project>
