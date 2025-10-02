@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
 	  <PackageId>Picoage.EventSourcing.Common</PackageId>
-	  <Version>1.0.3</Version>
 	  <Authors>Vishnu Kumar</Authors>
 	  <Company>Picoage</Company>
 	  <Product>Picoage.EventSourcing.CosmosDb</Product>
