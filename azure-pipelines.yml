@@ -38,14 +38,21 @@ steps:
   inputs:
     command: 'pack'
     packagesToPack: '**/Picoage.EventSourcing.CosmosDb.csproj'
-    versioningScheme: 'off'
+    versioningScheme: 'byBuildNumber'
 
 - task: DotNetCoreCLI@2
   displayName: Pack Picoage.EventSourcing.Common
   inputs:
     command: 'pack'
     packagesToPack: '**/Picoage.EventSourcing.Common.csproj'
-    versioningScheme: 'off'
+    versioningScheme: 'byBuildNumber'
+
+- task: DotNetCoreCLI@2
+  displayName: Pack Picoage.EventSourcing.Common
+  inputs:
+    command: 'pack'
+    packagesToPack: '**/Picoage.EventSourcing.InMemory.csproj'
+    versioningScheme: 'byBuildNumber'
 
 - task: NuGetCommand@2
   displayName: Push To Nuget.Org 
