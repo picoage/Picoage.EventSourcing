@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
 	  <PackageId>Picoage.EventSourcing.CosmosDb</PackageId>
-	  <Version>1.0.2</Version>
+	  <Version>1.0.3</Version>
 	  <Authors>Vishnu Kumar</Authors>
 	  <Company>Picoage</Company>
 	  <Product>Picoage.EventSourcing.CosmosDb</Product>
