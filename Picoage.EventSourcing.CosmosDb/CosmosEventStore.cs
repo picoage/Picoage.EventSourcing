@@ -78,7 +78,7 @@ namespace Picoage.EventSourcing.CosmosDb
             try
             {
                 var jsonObject = await container.ReadItemAsync<JObject>(collectionId, new PartitionKey(collectionId));
-                CosmosEvent exsistingCosmosEvent = JsonConvert.DeserializeObject<CosmosEvent>(jsonObject.Resource.ToString()) ?? new();
+                CosmosEvent exsistingCosmosEvent = JsonConvert.DeserializeObject<CosmosEvent>(jsonObject.Resource.ToString(),jsonSetting) ?? new();
 
                 cosmosEvent.EventMessage = exsistingCosmosEvent?.EventMessage?.Concat(eventMessages)?.ToList() ?? [];
 
