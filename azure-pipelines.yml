@@ -34,10 +34,19 @@ steps:
     configuration: '$(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
+  displayName: Pack Picoage.EventSourcing.CosmosDb
   inputs:
     command: 'pack'
     packagesToPack: '**/Picoage.EventSourcing.CosmosDb.csproj'
     versioningScheme: 'off'
+
+- task: DotNetCoreCLI@2
+  displayName: Pack Picoage.EventSourcing.Common
+  inputs:
+    command: 'pack'
+    packagesToPack: '**/Picoage.EventSourcing.Common.csproj'
+    versioningScheme: 'off'
+
 - task: NuGetCommand@2
   displayName: Push To Nuget.Org 
   inputs:
