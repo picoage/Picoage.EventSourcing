@@ -65,7 +65,8 @@ namespace Picoage.EventSourcing.CosmosDb
         public async Task<IEnumerable<EventMessage>> ReplyEventsAsync(string id)
         {
             var jsonObject = await container.ReadItemAsync<JObject>(id, new PartitionKey(id));
-            CosmosEvent? cosmosEvent = JsonConvert.DeserializeObject<CosmosEvent>(jsonObject.Resource.ToString());
+            JsonSerializerSettings jsonSetting = CreateJsonSerializerSettings();
+            CosmosEvent? cosmosEvent = JsonConvert.DeserializeObject<CosmosEvent>(jsonObject.Resource.ToString(), jsonSetting);
             return cosmosEvent?.EventMessage ?? [];
         }
 
