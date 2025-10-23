@@ -17,7 +17,10 @@
     <PackageReference Include="Azure.Core" Version="1.49.0" />
     <PackageReference Include="Azure.Identity" Version="1.16.0" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.53.1" />
-    <PackageReference Include="Picoage.EventSourcing.Common" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Picoage.EventSourcing.Common\Picoage.EventSourcing.Common.csproj" />
   </ItemGroup>
 
 </Project>

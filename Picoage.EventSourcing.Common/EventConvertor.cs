@@ -41,10 +41,10 @@ namespace Picoage.EventSourcing.Common
             {
                 Assembly assembly = Assembly.Load(referencedAssembly);
 
-                Type? typrFromAssembly = assembly.GetTypes().SingleOrDefault(e => e.Name == typeName);
+                Type? typeFromAssembly = assembly.GetTypes().SingleOrDefault(e => e.Name == typeName);
 
-                if (typrFromAssembly is null) continue;
-                value = Activator.CreateInstance(typrFromAssembly) ?? throw new InvalidOperationException($"Type '{typeName}' not found");
+                if (typeFromAssembly is null) continue;
+                value = Activator.CreateInstance(typeFromAssembly) ?? throw new InvalidOperationException($"Type '{typeName}' not found");
                 break;
             }
             return value;
