@@ -18,7 +18,7 @@ namespace Picoage.EventSourcing.CosmosDb
         public CosmosEventStore(string connectionString, string databaseName, string containerName, bool isUsingProxy= false)
         {
             cosmosClientOptions.ApplicationRegion = Regions.UKSouth;
-            if(isUsingProxy) cosmosClientOptions.ConnectionMode = ConnectionMode.Gateway;
+            if(isUsingProxy == true) cosmosClientOptions.ConnectionMode = ConnectionMode.Gateway;
             cosmosClient = new CosmosClient(connectionString: connectionString, cosmosClientOptions);
             Database database = cosmosClient.GetDatabase(databaseName);
             database.CreateContainerIfNotExistsAsync(new ContainerProperties
@@ -32,7 +32,7 @@ namespace Picoage.EventSourcing.CosmosDb
         public CosmosEventStore(string endpoint, string databaseName, string containerName, string region = Regions.UKSouth, bool isUsingProxy = false)
         {
             cosmosClientOptions.ApplicationRegion = region;
-            if (isUsingProxy) cosmosClientOptions.ConnectionMode = ConnectionMode.Gateway;
+            if (isUsingProxy == true) cosmosClientOptions.ConnectionMode = ConnectionMode.Gateway;
             cosmosClient = new CosmosClient(accountEndpoint: endpoint, tokenCredential: new DefaultAzureCredential());
             Database database = cosmosClient.GetDatabase(databaseName);
             database.CreateContainerIfNotExistsAsync(new ContainerProperties
