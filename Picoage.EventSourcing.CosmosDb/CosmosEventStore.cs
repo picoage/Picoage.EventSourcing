@@ -15,9 +15,10 @@ namespace Picoage.EventSourcing.CosmosDb
         private IList<EventMessage> eventMessages = [];
         private static string collectionId = string.Empty;
 
-        public CosmosEventStore(string connectionString, string databaseName, string containerName)
+        public CosmosEventStore(string connectionString, string databaseName, string containerName, bool isUsingProxy= false)
         {
             cosmosClientOptions.ApplicationRegion = Regions.UKSouth;
+            if(isUsingProxy) cosmosClientOptions.ConnectionMode = ConnectionMode.Gateway;
             cosmosClient = new CosmosClient(connectionString: connectionString, cosmosClientOptions);
             Database database = cosmosClient.GetDatabase(databaseName);
             database.CreateContainerIfNotExistsAsync(new ContainerProperties
