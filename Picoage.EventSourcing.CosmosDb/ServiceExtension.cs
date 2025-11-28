@@ -8,7 +8,7 @@ namespace Picoage.EventSourcing.CosmosDb
     {
         public static void AddCosmosDbEventStoreWithConnectionString(this IServiceCollection serviceCollection, string connectionString, string databaseName, string containerName)
         {
-            serviceCollection.AddSingleton<IEventStore>(new CosmosEventStore(connectionString, databaseName, containerName, false));
+            serviceCollection.AddSingleton<IEventStore>(new CosmosEventStore(connectionString, databaseName, containerName));
         }
 
         public static void AddCosmosDbEventStoreWithMI(this IServiceCollection serviceCollection, string endpoint, string databaseName, string containerName, string region = Regions.UKSouth)
